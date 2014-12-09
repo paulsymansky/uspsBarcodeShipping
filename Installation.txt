@@ -1,0 +1,233 @@
+Installation.txt
+
+Barcode USPS Shipping
+v2.0.2, Updated 10/29/2012
+
+Written for osCommerce 2.2
+
+Paul Symansky, copyright 2010-2012
+
+///////////////////////////////////////////////////////////////////////////////////
+// GPLv3 License
+///////////////////////////////////////////////////////////////////////////////////
+//    
+//   This file is part of Barcode USPS Shipping.
+//
+//    Barcode USPS Shipping is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    Barcode USPS Shipping is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with Barcode USPS Shipping.  If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////////
+
+INSTALLATION
+
+1. Add the "barcodes" directory to /catalog/admin/.
+2. Add the font file "arialbd.ttf" to /catalog/admin/barcodes.  This file is rather large (9728kb), so
+   it's not included with the contribution package.  Most computers with Microsoft Office will have this
+   file.  Conversely, you can find it freely available on the web, including here:
+
+	http://www.paulsymansky.com/usps:start
+ 
+3. Modify "packingslip.php" in /catalog/admin/.
+	a. If your "packingslip.php" file isn't modified, simply overwrite the file on your
+	  server with the supplied "packingslip.php" file in this contribution.
+
+	b. If your file is modified, you will need to add these three lines of code:
+
+		<!-- BOF Barcode Modification - line 39 //-->
+
+		<br><img src="barcodes/barcode.php?oID=<?php echo $oID;?>">
+		
+		<!-- EOF Barcode Modification //-->	
+
+			After this, near line 38:
+
+		<td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+			<tr>
+
+				<td class="pageHeading"><?php echo nl2br(STORE_NAME_ADDRESS); ?></td>
+
+				<td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'oscommerce.gif', 'osCommerce', '204', '50'); ?></td>
+
+4. Run "setup.sql" in your database.  You can run it in your osCommerce database, or a new one.
+   In either case, make sure you know your login credentials.
+
+5. Open "bc_db_query.php" and supply the correct login information for your osCommerce database.
+   Beneath that, supply the login information for the database containing the new tables created 
+   by the "setup.sql" script.  If this database is the same as your osCommerce database, provide 
+   the same login information again.
+
+6. Install "bc_db_query.php" somewhere on your web server.  Make a note of the location.  We recommend
+   placing the file in a protected directory (basic HTTP authentication). As of version 2.0.0 of this
+   add-on, bc_db_query.php requires PHP5+. Certain servers running multiple versions of PHP will execute
+   scripts using PHP5 by changing the file extension (e.g. ".php5" instead of ".php") or modifying the
+   .htaccess file.
+
+7. Install the Firefox add-on by dragging "barcodeshipping.xpi" into Firefox.
+	a. Follow the prompts to finish the installation.
+
+8. In Firefox, access the add-on's option menu by following this path:
+
+	Tools > Add-ons > Barcode USPS Module > Options
+
+	General tab:
+
+		a. Enter the location of the "bc_db_query.php" script on your server 
+		   using this format: "http://www.examples.com/directory/"
+
+		b. If the script is in a protected directory, provide the login name and password 
+		   and check the box directly beneath.
+
+		c. If your barcode scanner reads the checksum digit (the final digit, not a part
+		   of your order number), be sure to check the box marked "Remove checksum digit?".
+
+		d. If you regularly ship packages from somewhere other than the return address,
+		   enter the new zip code andcheck the box marked "Use alternate origin ZIP code?".
+
+	USPS tab:
+		a. (optional) If you would like the add-on to automatically log in and take you
+		   to the label form, provide your USPS login username and password.
+
+		b. (optional) If you would like the add-on to automatically add batch labels to 
+		   a batch, check the box marked "Automatically submit batch label form?".
+
+		c. (optional) If you would like the add-on to automatically populate the credit 
+		   card security code (CVV) field, provide your card's CVV number and check the 
+		   box marked "Automatically populated CVV number?".  Take note that this function
+		   will only populate the CVV field for the first listed credit card. Check the 
+		   box marked "Automatically submit payment form?" to automatically submit this 
+		   form as well.
+
+		d. (optional) If you would like the add-on to automatically agree to USPS's 
+		   domestic and international shipping terms, select the appropriate boxes under 
+		   "Confirmation Information."  You may choose to omit the receipt and shipping 
+		   instructions from the labels and automatically submit this form here too.
+
+	Customs tab: 
+
+		a. (optional) If you would like the add-on to automatically populate the customs 
+		   form for international labels, provide the details of your package's contents.  
+		   Be sure to check the box marked "Automatically populate customs form?".  This 
+		   feature only currently supports single item shipments and products manufactured 
+		   in the United States.
+		
+			i. It is possible to change the country of origin by modifying the 
+			   following file: 
+                   	
+				Chrome://defaults/preferences/prefs.js
+
+9. (optional) Right-click on the toolbar in Firefox and select "Customize...".  Now find the USPS logo
+   and drag it to your toolbar.  Clicking this logo will take you straight to the label form, or the
+   login page if you haven't provided your username and password.  
+
+10. You're all set!  Click the USPS icon or navigate to the USPS Click-N-Ship label form.  Using a 
+   plug-and-play/HID barcode scanner, scan the barcode on your packing slip.  The form should 
+   automatically be populated with the corresponding order information.
+
+
+UPGRADE
+ 
+1. Run "setup.sql" in the same database you originally used.
+
+2. Open "bc_db_query.php" and supply the correct login information for your osCommerce database.
+   Beneath that, supply the login information for the database containing the new tables created 
+   by the "setup.sql" script.  If this database is the same as your osCommerce database, provide 
+   the same login information again.
+
+3. Overwrite the copy of "bc_db_query.php" on your web server with the new one. As of version 2.0.0 of this
+   add-on, bc_db_query.php requires PHP5+. Certain servers running multiple versions of PHP will execute
+   scripts using PHP5 by changing the file extension (e.g. ".php5" instead of ".php") or modifying the
+   .htaccess file.
+
+4. Install the updated Firefox add-on by dragging "barcodeshipping.xpi" into Firefox.
+	a. Follow the prompts to finish the installation.
+
+5. The other files have not changed since the module was first written. The Firefox add-on's settings
+   should carry over, but please verify them anyway.
+
+
+CHANGELOG
+To do...
+- Anonymize all the functions
+- Localize prompts/error messages in JavaScript code
+- Add support for small screens, e.g. hotkeys for choosing postage and submitting forms
+
+v2.0.0 10/29/2012
+- Added support for new USPS Click-N-Ship website
+- Overhauled all functions and settings for compatibility with new website
+
+v1.6.0 11/1/2011
+- Added support for new USPS payment portal and label printing procedure
+
+v1.5.1 10/7/2011
+- Modified application for new compatibility
+
+v1.5.0 7/30/2011
+- Updated application to work with new USPS site structure.
+- Updated icons to work better with standard, dark Firefox theme.
+- Added 64x64px icon for Firefox 4 Add-ons menu.
+
+v1.4.5b 4/14/2011
+- Fixed a small bug in the bc_db_query.php script. "str_replace()" was misspelled.
+
+v1.4.5a 3/12/2011
+- Removed arialbd.tff from contribution package due to large size
+
+v1.4.5 3/5/2011
+- Added automatic insurance terms acceptance on payment page
+- Modified install.rdf to support new versions of Firefox
+
+v1.4.4 1/19/2011
+- Fixed persistence after tab close bug
+
+v1.4.3 11/29/2010
+- Fixed numeric character recognition bug
+
+v1.4.2 11/29/2010
+- Added option to automatically submit batch labels
+- Added batch label support
+- Re-released under GPLv3 licenese
+
+v1.4.1 11/28/2010
+- Added option to automatically populate and submit confirmation page
+- Reorganized options window and added icons
+
+v1.4.0 11/28/2010
+- Added option to automatically populate and submit payment page
+
+v1.3.3 11/28/2010
+- Added an option to remove the barcode's checksum digit
+
+v1.3.2 11/22/2010
+- Added better enabling/disabling logic based on tab changes and tab closings
+
+v1.3.1 11/22/2010
+- Added support to automatically fill the item weight fields in the customs form 
+- Added automatic form submit for customs form
+
+v1.3.0 11/21/2010
+- Anonymized more functions
+- Added an option to automatically populate the customs form for international labels
+- Modified bc_db_query.php to support order totals and subtotals
+- Localized all option form labels
+
+v1.2.2 11/15/2010
+- Added a popup notification to announce the add-on is ready to scan
+- Anonymized new functions
+
+v1.2.1 11/14/2010
+- Added the USPS logo button
+- Removed some unecessary code
+
+v1.0.0 11/8/2010
+- Created first version
